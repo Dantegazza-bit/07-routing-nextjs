@@ -6,10 +6,10 @@ import {
 } from "@tanstack/react-query";
 
 import { fetchNoteById } from "@/lib/api";
-import NotePreview from "./NotePreview.client";
+import NotePreviewClient from "./NotePreview.client";
 
 interface ModalNotePageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 async function getDehydratedState(id: string) {
@@ -24,12 +24,12 @@ async function getDehydratedState(id: string) {
 }
 
 export default async function ModalNotePage({ params }: ModalNotePageProps) {
-  const { id } = await params;
+  const { id } = params;
   const state = await getDehydratedState(id);
 
   return (
     <HydrationBoundary state={state}>
-      <NotePreview id={id} />
+      <NotePreviewClient params={{ id }} />
     </HydrationBoundary>
   );
 }
