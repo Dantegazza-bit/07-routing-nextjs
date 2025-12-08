@@ -1,7 +1,7 @@
 // app/@modal/(.)notes/[id]/NotePreview.client.tsx
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import Modal from "@/components/Modal/Modal";
@@ -9,18 +9,12 @@ import { fetchNoteById } from "@/lib/api";
 import type { Note } from "@/types/note";
 import NotePreview from "@/components/NotePreview/NotePreview";
 
-interface NotePreviewClientProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function NotePreviewClient({ params }: NotePreviewClientProps) {
+export default function NotePreviewClient() {
   const router = useRouter();
-  const { id } = params;
+  const params = useParams<{ id: string }>();
+  const id = params.id;
 
   const handleClose = () => {
-    // повертаємось на маршрут, з якого відкрили модалку
     router.back();
   };
 
@@ -31,6 +25,7 @@ export default function NotePreviewClient({ params }: NotePreviewClientProps) {
   } = useQuery<Note, Error>({
     queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
+    enabled: !!id, // не робимо запит, поки id немає
     refetchOnMount: false,
   });
 

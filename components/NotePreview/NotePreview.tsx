@@ -1,4 +1,3 @@
-// components/NotePreview/NotePreview.tsx
 "use client";
 
 import type { Note } from "@/types/note";
