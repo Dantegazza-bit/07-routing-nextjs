@@ -1,4 +1,5 @@
 // app/notes/[id]/page.tsx
+import type { Metadata } from "next";
 import {
   HydrationBoundary,
   QueryClient,
@@ -10,6 +11,47 @@ import NoteDetailsClient from "./NoteDetails.client";
 
 interface NoteDetailsPageProps {
   params: Promise<{ id: string }>;
+}
+
+const siteUrl = "http://localhost:3000"; // потім заміниш на https://<твій-проєкт>.vercel.app
+
+export async function generateMetadata({
+  params,
+}: NoteDetailsPageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  try {
+    const note = await fetchNoteById(id);
+
+    const title = `${note.title} | NoteHub`;
+    const description =
+      (note.content ?? "").trim().slice(0, 160) || "Note details in NoteHub.";
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        url: `${siteUrl}/notes/${id}`,
+        images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+      },
+    };
+  } catch {
+    const title = "Note not found | NoteHub";
+    const description = "This note does not exist in NoteHub.";
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        url: `${siteUrl}/notes/${id}`,
+        images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+      },
+    };
+  }
 }
 
 export default async function NoteDetailsPage({

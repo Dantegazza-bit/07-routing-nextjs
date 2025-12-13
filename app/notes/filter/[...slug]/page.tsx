@@ -1,4 +1,5 @@
 // app/notes/filter/[...slug]/page.tsx
+import type { Metadata } from "next";
 import {
   QueryClient,
   dehydrate,
@@ -14,6 +15,31 @@ interface RouteParams {
 
 interface FilterPageProps {
   params: Promise<RouteParams>;
+}
+
+const siteUrl = "http://localhost:3000"; // потім заміниш на https://<твій-проєкт>.vercel.app
+
+export async function generateMetadata({
+  params,
+}: FilterPageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  const rawTag = slug?.[0] ?? "all";
+  const tagLabel = rawTag === "all" ? "All" : rawTag;
+
+  const title = `Notes: ${tagLabel} | NoteHub`;
+  const description = `Browse notes filtered by: ${tagLabel}.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/notes/filter/${rawTag}`,
+      images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
+    },
+  };
 }
 
 async function getDehydratedState(tag: string | undefined) {
@@ -43,7 +69,6 @@ export default async function FilterPage({ params }: FilterPageProps) {
 
   return (
     <HydrationBoundary state={state}>
-      {/* обов’язковий проп tag */}
       <NotesClient tag={rawTag} />
     </HydrationBoundary>
   );
