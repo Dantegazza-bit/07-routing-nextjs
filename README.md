@@ -5,7 +5,7 @@ A Next.js (App Router) application focused on advanced routing patterns.
 The project demonstrates parallel routes, catch-all routes, intercepted routes for modals, and proper handling of not-found pages, while working with server-side and client-side rendering.
 
 ## 🚀 Demo
-YOUR_VERCEL_URL_HERE
+https://07-routing-nextjs-wzfs.vercel.app/)
 
 ## 🛠 Tech Stack
 - Next.js (App Router)
